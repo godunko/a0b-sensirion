@@ -1,5 +1,5 @@
 name = "a0b_sensirion"
-version = "0.1.0-dev"
+version = "0.1.0"
 website = "https://github.com/godunko/a0b-sensirion"
 description = "A0B: Utilities for various Sensirion's sensors"
 long-description = """
