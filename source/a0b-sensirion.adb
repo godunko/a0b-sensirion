@@ -93,8 +93,8 @@ package body A0B.Sensirion with Pure is
      (Packet  : A0B.Types.Arrays.Unsigned_8_Array;
       Data    : out A0B.Types.Arrays.Unsigned_8_Array;
       Length  : out A0B.Types.Unsigned_32;
-      Success : in out Boolean;
-      Unknown : Boolean := False)
+      Success : in out Boolean)
+
    is
       Current : A0B.Types.Unsigned_32 := Packet'First;
 
@@ -127,7 +127,7 @@ package body A0B.Sensirion with Pure is
          Current := Current + 3;
       end loop;
 
-      if Current < Packet'Last and not Unknown then
+      if Current < Packet'Last then
          Success := False;
       end if;
    end Decode_I2C_Packet;

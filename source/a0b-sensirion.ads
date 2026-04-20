@@ -24,16 +24,10 @@ package A0B.Sensirion with Pure is
      (Packet  : A0B.Types.Arrays.Unsigned_8_Array;
       Data    : out A0B.Types.Arrays.Unsigned_8_Array;
       Length  : out A0B.Types.Unsigned_32;
-      Success : in out Boolean;
-      Unknown : Boolean := False);
+      Success : in out Boolean);
    --  Decode `Packet` into `Data` buffer and sets `Length` to actual length
    --  of the decoded data, even if `Data` buffer is not enough to store all
    --  decoded data.
-   --
-   --  When `Unknown` set to `True`, `Packet` might be large than read length of
-   --  the data, and decoding is processed till checksum is valid. Error is not
-   --  reported in this case. Application is responsible to fill buffer to some
-   --  pattern to violate checksum check (bytes 16#00# and 16#FF# works well).
 
    procedure Encode_I2C_Packet
      (Data   : A0B.Types.Arrays.Unsigned_8_Array;
