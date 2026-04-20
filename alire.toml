@@ -25,4 +25,4 @@ a0b_base = "*"
 [[actions]]
 type = "test"
 directory = "selftest"
-command = ["alr", "build"]
+command = ["alr", "test"]
