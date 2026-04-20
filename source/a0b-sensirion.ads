@@ -15,6 +15,9 @@ package A0B.Sensirion with Pure is
 
    function Compute_CRC
      (Data : A0B.Types.Arrays.Unsigned_8_Array) return A0B.Types.Unsigned_8;
+   function Compute_CRC
+     (Byte_1 : A0B.Types.Unsigned_8;
+      Byte_2 : A0B.Types.Unsigned_8) return A0B.Types.Unsigned_8;
    --  Compute CRC using Sensirion's algorithm
 
    procedure Decode_I2C_Packet

@@ -42,6 +42,43 @@ package body A0B.Sensirion with Pure is
       return CRC;
    end Compute_CRC;
 
+   -----------------
+   -- Compute_CRC --
+   -----------------
+
+   function Compute_CRC
+     (Byte_1 : A0B.Types.Unsigned_8;
+      Byte_2 : A0B.Types.Unsigned_8) return A0B.Types.Unsigned_8
+   is
+      CRC : A0B.Types.Unsigned_8 := CRC8_INIT;
+
+      procedure Process_Byte (B : A0B.Types.Unsigned_8) with Inline_Always;
+
+      ------------------
+      -- Process_Byte --
+      ------------------
+
+      procedure Process_Byte (B : A0B.Types.Unsigned_8) is
+      begin
+         CRC := @ xor B;
+
+         for J in reverse 0 .. 7 loop
+            if (CRC and 16#80#) /= 0 then
+               CRC := A0B.Types.Shift_Left (@, 1) xor CRC8_POLYNOMIAL;
+
+            else
+               CRC := A0B.Types.Shift_Left (@, 1);
+            end if;
+         end loop;
+      end Process_Byte;
+
+   begin
+      Process_Byte (Byte_1);
+      Process_Byte (Byte_2);
+
+      return CRC;
+   end Compute_CRC;
+
    -----------------------
    -- Decode_I2C_Packet --
    -----------------------
@@ -64,7 +101,7 @@ package body A0B.Sensirion with Pure is
 
       while Current + 2 <= Packet'Last loop
          if Packet (Current + 2)
-           /= Compute_CRC (Packet (Current .. Current + 1))
+           /= Compute_CRC (Packet (Current), Packet (Current + 1))
          then
             exit;
          end if;
@@ -98,8 +135,6 @@ package body A0B.Sensirion with Pure is
       Packet : out A0B.Types.Arrays.Unsigned_8_Array;
       Length : out A0B.Types.Unsigned_32)
    is
-      use type A0B.Types.Arrays.Unsigned_8_Array;
-
       Current : A0B.Types.Unsigned_32 := Data'First;
 
    begin
@@ -120,7 +155,7 @@ package body A0B.Sensirion with Pure is
 
          if Length < Packet'Length then
             Packet (Packet'First + Length) :=
-              Compute_CRC (Data (Current .. Current + 1));
+              Compute_CRC (Data (Current), Data (Current + 1));
          end if;
 
          Length := @ + 1;
@@ -143,7 +178,7 @@ package body A0B.Sensirion with Pure is
 
          if Length < Packet'Length then
             Packet (Packet'First + Length) :=
-              Compute_CRC (Data (Current .. Current) & 0);
+              Compute_CRC (Data (Current), 0);
          end if;
 
          Length := @ + 1;
